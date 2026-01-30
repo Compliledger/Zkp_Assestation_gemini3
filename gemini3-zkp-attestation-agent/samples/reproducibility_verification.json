@@ -1,0 +1,52 @@
+{
+  "verification_passed": true,
+  "original_transaction_id": "HCMPCTRU3MRBLUOFRF66KFPGBCQ7DFRCCLPKOB7HTLNSFHJDFQ2Q",
+  "original_merkle_root": "50f49b602185541979ffa19e5ef9e5b0575eb644fb793e4cd2df73709904e7eb",
+  "recomputed_merkle_root": "50f49b602185541979ffa19e5ef9e5b0575eb644fb793e4cd2df73709904e7eb",
+  "evidence_count": 5,
+  "hash_verification": {
+    "total": 5,
+    "passed": 5,
+    "failed": 0
+  },
+  "merkle_tree_match": true,
+  "attestation_json_consistent": true,
+  "onchain_data_consistent": true,
+  "discrepancies": [],
+  "detailed_results": {
+    "recomputed_hashes": [
+      "19a7f341278f63af120a88deea2d695419edfacab59f973a4ff6a93c2d88aa1e",
+      "d7f8aedf6ad7726ad56987df87c808dcff2a3265e3632323324dfe52bdadddf5",
+      "ab3cd5c04aa2ad35d88342bbd5d315d5367143917cb5c582313eb334962368b7",
+      "1866be00fbfbca4d9b144f9c5736195fc6bd324c4ace6d1e1ad3de54891f6c64",
+      "951c5953beffec018dedfd752dbf71d01860a380794f52178a4edc7ea55d2929"
+    ],
+    "hash_matches": [
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "merkle_tree_analysis": {
+      "recomputed_root": "50f49b602185541979ffa19e5ef9e5b0575eb644fb793e4cd2df73709904e7eb",
+      "original_root": "50f49b602185541979ffa19e5ef9e5b0575eb644fb793e4cd2df73709904e7eb",
+      "root_match": true,
+      "leaf_count": 5,
+      "hash_algorithm": "SHA256"
+    },
+    "comparison_results": {
+      "attestation_json": {
+        "merkle_section_match": true,
+        "attestation_package_match": true,
+        "internal_consistent": true
+      },
+      "onchain": {
+        "stored_onchain_match": true,
+        "live_onchain_match": true,
+        "transaction_id": "HCMPCTRU3MRBLUOFRF66KFPGBCQ7DFRCCLPKOB7HTLNSFHJDFQ2Q"
+      }
+    },
+    "discrepancies": []
+  }
+}

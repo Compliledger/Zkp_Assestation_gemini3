@@ -1,0 +1,265 @@
+{
+  "success": true,
+  "completed_at": "2026-01-23T08:12:50.413915",
+  "summary": {
+    "evidence_count": 5,
+    "merkle_root": "50f49b602185541979ffa19e5ef9e5b0575eb644fb793e4cd2df73709904e7eb",
+    "leaf_count": 5,
+    "attestation_id": "ATT-20260123081243-6DBE8795",
+    "package_hash": "d14997a11549d85e9996efb6e0b498fe549683873ab24e6f3d60ea1fb824e895",
+    "transaction_id": "HCMPCTRU3MRBLUOFRF66KFPGBCQ7DFRCCLPKOB7HTLNSFHJDFQ2Q",
+    "confirmed_round": 59786550,
+    "explorer_url": "https://testnet.algoexplorer.io/tx/HCMPCTRU3MRBLUOFRF66KFPGBCQ7DFRCCLPKOB7HTLNSFHJDFQ2Q",
+    "verified": true
+  },
+  "all_results": {
+    "evidence": {
+      "evidence_count": 5,
+      "evidence_items": [
+        {
+          "evidence_id": "EV-20260123-0001",
+          "type": "compliance_report",
+          "content": {
+            "evidence_id": "EV-20260123-0001",
+            "type": "compliance_report",
+            "timestamp": "2026-01-23T08:12:43.077224",
+            "source": "compliance_verification_agent",
+            "data": {
+              "description": "Mock compliance report evidence #1",
+              "status": "compliant",
+              "score": 95,
+              "findings": [
+                "Finding 1: All controls verified",
+                "Finding 2: All controls verified",
+                "Finding 3: All controls verified"
+              ]
+            }
+          },
+          "content_hash": "19a7f341278f63af120a88deea2d695419edfacab59f973a4ff6a93c2d88aa1e",
+          "size_bytes": 371
+        },
+        {
+          "evidence_id": "EV-20260123-0002",
+          "type": "security_audit",
+          "content": {
+            "evidence_id": "EV-20260123-0002",
+            "type": "security_audit",
+            "timestamp": "2026-01-23T08:12:43.078001",
+            "source": "compliance_verification_agent",
+            "data": {
+              "description": "Mock security audit evidence #2",
+              "status": "compliant",
+              "score": 96,
+              "findings": [
+                "Finding 1: All controls verified",
+                "Finding 2: All controls verified",
+                "Finding 3: All controls verified"
+              ]
+            }
+          },
+          "content_hash": "d7f8aedf6ad7726ad56987df87c808dcff2a3265e3632323324dfe52bdadddf5",
+          "size_bytes": 365
+        },
+        {
+          "evidence_id": "EV-20260123-0003",
+          "type": "access_log",
+          "content": {
+            "evidence_id": "EV-20260123-0003",
+            "type": "access_log",
+            "timestamp": "2026-01-23T08:12:43.078571",
+            "source": "compliance_verification_agent",
+            "data": {
+              "description": "Mock access log evidence #3",
+              "status": "compliant",
+              "score": 97,
+              "findings": [
+                "Finding 1: All controls verified",
+                "Finding 2: All controls verified",
+                "Finding 3: All controls verified"
+              ]
+            }
+          },
+          "content_hash": "ab3cd5c04aa2ad35d88342bbd5d315d5367143917cb5c582313eb334962368b7",
+          "size_bytes": 357
+        },
+        {
+          "evidence_id": "EV-20260123-0004",
+          "type": "configuration_snapshot",
+          "content": {
+            "evidence_id": "EV-20260123-0004",
+            "type": "configuration_snapshot",
+            "timestamp": "2026-01-23T08:12:43.078571",
+            "source": "compliance_verification_agent",
+            "data": {
+              "description": "Mock configuration snapshot evidence #4",
+              "status": "compliant",
+              "score": 98,
+              "findings": [
+                "Finding 1: All controls verified",
+                "Finding 2: All controls verified",
+                "Finding 3: All controls verified"
+              ]
+            }
+          },
+          "content_hash": "1866be00fbfbca4d9b144f9c5736195fc6bd324c4ace6d1e1ad3de54891f6c64",
+          "size_bytes": 381
+        },
+        {
+          "evidence_id": "EV-20260123-0005",
+          "type": "vulnerability_scan",
+          "content": {
+            "evidence_id": "EV-20260123-0005",
+            "type": "vulnerability_scan",
+            "timestamp": "2026-01-23T08:12:43.078571",
+            "source": "compliance_verification_agent",
+            "data": {
+              "description": "Mock vulnerability scan evidence #5",
+              "status": "compliant",
+              "score": 99,
+              "findings": [
+                "Finding 1: All controls verified",
+                "Finding 2: All controls verified",
+                "Finding 3: All controls verified"
+              ]
+            }
+          },
+          "content_hash": "951c5953beffec018dedfd752dbf71d01860a380794f52178a4edc7ea55d2929",
+          "size_bytes": 373
+        }
+      ],
+      "evidence_hashes": [
+        "19a7f341278f63af120a88deea2d695419edfacab59f973a4ff6a93c2d88aa1e",
+        "d7f8aedf6ad7726ad56987df87c808dcff2a3265e3632323324dfe52bdadddf5",
+        "ab3cd5c04aa2ad35d88342bbd5d315d5367143917cb5c582313eb334962368b7",
+        "1866be00fbfbca4d9b144f9c5736195fc6bd324c4ace6d1e1ad3de54891f6c64",
+        "951c5953beffec018dedfd752dbf71d01860a380794f52178a4edc7ea55d2929"
+      ],
+      "total_size_bytes": 1847
+    },
+    "merkle_tree": {
+      "merkle_root": "50f49b602185541979ffa19e5ef9e5b0575eb644fb793e4cd2df73709904e7eb",
+      "leaf_count": 5,
+      "hash_algorithm": "SHA256",
+      "sample_proof": [
+        {
+          "position": "right",
+          "hash": "d7f8aedf6ad7726ad56987df87c808dcff2a3265e3632323324dfe52bdadddf5"
+        },
+        {
+          "position": "right",
+          "hash": "c0d2b79c1c35d2cdc31e9334781bb6b44572f11f83e4b35937c3e8cd4cfe9a13"
+        },
+        {
+          "position": "right",
+          "hash": "0ed36c871af51fbc6bad28dcc51344a3990dcaf38ada4f4472aefcd3a309e85e"
+        }
+      ]
+    },
+    "attestation": {
+      "attestation_package": {
+        "protocol": "zkpa",
+        "version": "1.1",
+        "attestation_id": "ATT-20260123081243-6DBE8795",
+        "created_at": "2026-01-23T08:12:43.080361",
+        "claim": {
+          "claim_id": "CLM-20260123-001",
+          "claim_type": "compliance_verification",
+          "claim_statement": "Organization maintains SOC2 Type II compliance controls",
+          "status": "verified"
+        },
+        "evidence": {
+          "bundle_id": "BDL-20260123-001",
+          "evidence_count": 5,
+          "merkle_root": "50f49b602185541979ffa19e5ef9e5b0575eb644fb793e4cd2df73709904e7eb",
+          "hash_algorithm": "SHA256",
+          "evidence_types": [
+            "security_audit",
+            "compliance_report",
+            "configuration_snapshot",
+            "vulnerability_scan",
+            "access_log"
+          ]
+        },
+        "issuer": {
+          "id": "compliance-agent-001",
+          "name": "ZKP Compliance Verification Agent",
+          "type": "automated_agent"
+        },
+        "subject": {
+          "organization": "Example Corp",
+          "domain": "example.com",
+          "assessment_period": {
+            "start": "2025-10-25T08:12:43.080361",
+            "end": "2026-01-23T08:12:43.080361"
+          }
+        },
+        "metadata": {
+          "compliance_framework": "SOC2_TYPE_II",
+          "assessment_type": "continuous_monitoring",
+          "confidence_level": "high",
+          "validity_period_days": 90
+        },
+        "package_hash": "d14997a11549d85e9996efb6e0b498fe549683873ab24e6f3d60ea1fb824e895"
+      },
+      "attestation_id": "ATT-20260123081243-6DBE8795",
+      "package_hash": "d14997a11549d85e9996efb6e0b498fe549683873ab24e6f3d60ea1fb824e895",
+      "package_size_bytes": 1052
+    },
+    "signature": {
+      "signature_metadata": {
+        "algorithm": "Ed25519",
+        "signer_address": "HDNKNQ7FJF37KLEVCHWWGH5O3J7HDY26JKNXHWYMYBXGL4VGETH57UKQ3A",
+        "signed_at": "2026-01-23T08:12:43.526188",
+        "content_hash": "d14997a11549d85e9996efb6e0b498fe549683873ab24e6f3d60ea1fb824e895",
+        "signature_type": "algorand_account"
+      },
+      "signer_address": "HDNKNQ7FJF37KLEVCHWWGH5O3J7HDY26JKNXHWYMYBXGL4VGETH57UKQ3A",
+      "algorithm": "Ed25519"
+    },
+    "anchoring": {
+      "success": true,
+      "transaction_id": "HCMPCTRU3MRBLUOFRF66KFPGBCQ7DFRCCLPKOB7HTLNSFHJDFQ2Q",
+      "confirmed_round": 59786550,
+      "explorer_url": "https://testnet.algoexplorer.io/tx/HCMPCTRU3MRBLUOFRF66KFPGBCQ7DFRCCLPKOB7HTLNSFHJDFQ2Q",
+      "sender": "HDNKNQ7FJF37KLEVCHWWGH5O3J7HDY26JKNXHWYMYBXGL4VGETH57UKQ3A",
+      "fee": 0.001,
+      "note_data": {
+        "protocol": "zkpa",
+        "version": "1.1",
+        "attestation_id": "ATT-20260123081243-6DBE8795",
+        "merkle_root": "50f49b602185541979ffa19e5ef9e5b0575eb644fb793e4cd2df73709904e7eb",
+        "package_hash": "d14997a11549d85e9996efb6e0b498fe549683873ab24e6f3d60ea1fb824e895",
+        "timestamp": "2026-01-23T08:12:44.058939",
+        "metadata": {
+          "claim_type": "compliance_verification",
+          "evidence_count": 5,
+          "framework": "SOC2_TYPE_II"
+        }
+      },
+      "verified_on_chain": true
+    },
+    "verification": {
+      "verified": true,
+      "transaction_confirmed": true,
+      "note_data": {
+        "attestation_id": "ATT-20260123081243-6DBE8795",
+        "merkle_root": "50f49b602185541979ffa19e5ef9e5b0575eb644fb793e4cd2df73709904e7eb",
+        "metadata": {
+          "claim_type": "compliance_verification",
+          "evidence_count": 5,
+          "framework": "SOC2_TYPE_II"
+        },
+        "package_hash": "d14997a11549d85e9996efb6e0b498fe549683873ab24e6f3d60ea1fb824e895",
+        "protocol": "zkpa",
+        "timestamp": "2026-01-23T08:12:44.058939",
+        "version": "1.1"
+      },
+      "verification_checks": {
+        "protocol_correct": true,
+        "version_correct": true,
+        "merkle_root_present": true,
+        "attestation_id_present": true
+      }
+    }
+  }
+}

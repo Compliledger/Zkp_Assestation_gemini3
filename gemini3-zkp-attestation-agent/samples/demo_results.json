@@ -1,0 +1,35 @@
+{
+  "demonstration": true,
+  "steps_completed": [
+    "evidence",
+    "merkle_tree",
+    "attestation",
+    "signature"
+  ],
+  "steps_pending": [
+    "blockchain_anchoring",
+    "verification"
+  ],
+  "account": {
+    "address": "HDNKNQ7FJF37KLEVCHWWGH5O3J7HDY26JKNXHWYMYBXGL4VGETH57UKQ3A",
+    "balance": 20.0,
+    "funded": true
+  },
+  "evidence": {
+    "count": 5,
+    "total_size": 1847
+  },
+  "merkle_tree": {
+    "root": "0dcafbe4c5d930dce98342f58b090600296b81b093422895801f4605f053fc64",
+    "leaf_count": 5
+  },
+  "attestation": {
+    "id": "ATT-20260123081220-A88C0D51",
+    "package_hash": "94874f5d00d1c7659e68a657d766f0c45912551ebf822db184ffbdea6e599762",
+    "package_size": 1052
+  },
+  "signature": {
+    "algorithm": "Ed25519",
+    "signer": "HDNKNQ7FJF37KLEVCHWWGH5O3J7HDY26JKNXHWYMYBXGL4VGETH57UKQ3A"
+  }
+}

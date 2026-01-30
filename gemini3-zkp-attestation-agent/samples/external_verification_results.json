@@ -1,0 +1,53 @@
+{
+  "verification_passed": true,
+  "verification_time": 0.5287630558013916,
+  "verifier_identity": "external",
+  "timestamp": "2026-01-23T08:19:29.321584",
+  "transaction_id": "HCMPCTRU3MRBLUOFRF66KFPGBCQ7DFRCCLPKOB7HTLNSFHJDFQ2Q",
+  "public_key": "HDNKNQ7FJF37KLEVCHWWGH5O3J7HDY26JKNXHWYMYBXGL4VGETH57UKQ3A",
+  "merkle_root_match": true,
+  "transaction_confirmed": true,
+  "sender_verified": true,
+  "protocol_valid": true,
+  "version_valid": true,
+  "detailed_results": {
+    "signature_verification": {
+      "expected_signer": "HDNKNQ7FJF37KLEVCHWWGH5O3J7HDY26JKNXHWYMYBXGL4VGETH57UKQ3A",
+      "attestation_signer": "HDNKNQ7FJF37KLEVCHWWGH5O3J7HDY26JKNXHWYMYBXGL4VGETH57UKQ3A",
+      "method": "algorand_blockchain_validation"
+    },
+    "attestation_data": {
+      "merkle_root": "50f49b602185541979ffa19e5ef9e5b0575eb644fb793e4cd2df73709904e7eb",
+      "attestation_id": "ATT-20260123081243-6DBE8795",
+      "evidence_count": 5
+    },
+    "blockchain_verification": {
+      "transaction_id": "HCMPCTRU3MRBLUOFRF66KFPGBCQ7DFRCCLPKOB7HTLNSFHJDFQ2Q",
+      "confirmed_round": 59786550,
+      "sender": "HDNKNQ7FJF37KLEVCHWWGH5O3J7HDY26JKNXHWYMYBXGL4VGETH57UKQ3A",
+      "sender_matches_public_key": true,
+      "transaction_confirmed": true
+    },
+    "onchain_note_data": {
+      "attestation_id": "ATT-20260123081243-6DBE8795",
+      "merkle_root": "50f49b602185541979ffa19e5ef9e5b0575eb644fb793e4cd2df73709904e7eb",
+      "metadata": {
+        "claim_type": "compliance_verification",
+        "evidence_count": 5,
+        "framework": "SOC2_TYPE_II"
+      },
+      "package_hash": "d14997a11549d85e9996efb6e0b498fe549683873ab24e6f3d60ea1fb824e895",
+      "protocol": "zkpa",
+      "timestamp": "2026-01-23T08:12:44.058939",
+      "version": "1.1"
+    },
+    "verification_checks": {
+      "protocol_is_zkpa": true,
+      "version_is_1_1": true,
+      "merkle_root_present": true,
+      "merkle_root_matches": true,
+      "attestation_id_present": true
+    },
+    "all_checks_passed": true
+  }
+}
