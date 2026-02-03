@@ -13,7 +13,7 @@ from prometheus_client import make_asgi_app
 
 from app.config import settings
 from app.utils.logger import setup_logging
-from app.api.v1 import attestations, verification, lifecycle, health, evidence, proofs, attestation_assembly, anchoring
+from app.api.v1 import attestations, verification, lifecycle, health, evidence, proofs, attestation_assembly, anchoring, demo
 from app.db.session import engine, Base
 
 # Setup logging
@@ -131,6 +131,12 @@ app.include_router(
     anchoring.router,
     prefix="/api/v1",
     tags=["Anchoring & Publication"],
+)
+
+app.include_router(
+    demo.router,
+    prefix="/api/v1/demo",
+    tags=["Demo & Testing"],
 )
 
 # Prometheus metrics endpoint

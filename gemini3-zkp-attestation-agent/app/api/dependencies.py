@@ -12,11 +12,40 @@ import logging
 from app.db.session import get_db
 from app.core.auth import JWTHandler, TokenPayload, PermissionChecker, TenantValidator
 from app.utils.errors import AuthenticationError, AuthorizationError
+from app.config import settings
 
 logger = logging.getLogger(__name__)
 
 # HTTP Bearer token scheme
 security = HTTPBearer()
+
+# Demo mode constants
+DEMO_TOKEN = "demo_hackathon_token_2026"
+DEMO_USER_PAYLOAD = TokenPayload(
+    sub="demo_user",
+    tenant_id="demo_tenant",
+    username="demo_user",
+    email="demo@hackathon.local",
+    permissions=["zkpa:generate", "zkpa:verify", "zkpa:revoke", "zkpa:admin"]
+)
+
+
+async def get_current_user_demo(
+    authorization: Optional[str] = Header(None)
+) -> TokenPayload:
+    """
+    Demo mode authentication - accepts any token or no token
+    
+    Returns:
+        Demo user payload
+    """
+    if authorization and "Bearer" in authorization:
+        # Accept any token in demo mode
+        logger.debug(f"Demo mode: Accepting authorization header")
+    else:
+        logger.debug(f"Demo mode: No auth required")
+    
+    return DEMO_USER_PAYLOAD
 
 
 async def get_current_user(
@@ -31,6 +60,11 @@ async def get_current_user(
     Raises:
         HTTPException: If authentication fails
     """
+    # Demo mode bypass
+    if settings.DEMO_MODE and not settings.get("REQUIRE_AUTH", False):
+        logger.debug("Demo mode enabled - using demo user")
+        return DEMO_USER_PAYLOAD
+    
     try:
         token = credentials.credentials
         payload = JWTHandler.verify_token(token)
