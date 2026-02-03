@@ -27,7 +27,11 @@ class Settings(BaseSettings):
     APP_ENV: str = "development"
     APP_VERSION: str = "1.0.0"
     LOG_LEVEL: str = "info"
-    DEBUG: bool = True
+    DEBUG: bool = False
+    
+    # Demo Mode Settings
+    DEMO_MODE: bool = True
+    USE_IN_MEMORY_STORAGE: bool = True
     
     # Server
     HOST: str = "0.0.0.0"

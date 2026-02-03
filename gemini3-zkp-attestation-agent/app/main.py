@@ -31,18 +31,34 @@ async def lifespan(app: FastAPI):
     logger.info(f"Environment: {settings.APP_ENV}")
     logger.info(f"Version: {settings.APP_VERSION}")
     
-    # Create database tables
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+    # Check if demo mode is enabled
+    demo_mode = getattr(settings, 'DEMO_MODE', False) or getattr(settings, 'USE_IN_MEMORY_STORAGE', False)
     
-    logger.info("Database tables created/verified")
+    if demo_mode:
+        logger.info("🚀 Demo Mode: Using in-memory storage (no database required)")
+        from app.storage.memory_store import memory_store
+        logger.info(f"Memory store initialized: {memory_store.get_stats()}")
+    else:
+        # Create database tables only if not in demo mode
+        try:
+            async with engine.begin() as conn:
+                await conn.run_sync(Base.metadata.create_all)
+            logger.info("Database tables created/verified")
+        except Exception as e:
+            logger.warning(f"Database initialization skipped: {e}")
+            logger.info("Falling back to in-memory storage")
+    
     logger.info("ZKPA service started successfully")
     
     yield
     
     # Shutdown
     logger.info("Shutting down ZKPA service...")
-    await engine.dispose()
+    if not demo_mode:
+        try:
+            await engine.dispose()
+        except Exception as e:
+            logger.warning(f"Database cleanup skipped: {e}")
     logger.info("ZKPA service shutdown complete")
 
 
