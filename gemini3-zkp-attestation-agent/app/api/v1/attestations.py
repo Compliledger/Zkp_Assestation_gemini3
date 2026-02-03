@@ -14,6 +14,8 @@ import logging
 from app.storage.memory_store import memory_store
 from app.utils.merkle import create_merkle_tree_from_hashes
 from app.config import settings
+from app.models.attestation_status import AttestationStatus
+from app.services.webhook_service import webhook_service
 import hashlib
 
 logger = logging.getLogger(__name__)
@@ -61,13 +63,19 @@ def generate_evidence_id() -> str:
     return f"EV-{timestamp}-{random_suffix}"
 
 async def process_attestation(claim_id: str):
-    """Background task to process attestation"""
+    """Background task to process attestation with explicit status lifecycle"""
     try:
         attestation = memory_store.get_attestation(claim_id)
         
-        # Step 3: Generate proof (simplified for demo)
-        attestation["status"] = "generating_proof"
+        # Step 1: Update to computing_commitment status
+        attestation["status"] = AttestationStatus.COMPUTING_COMMITMENT.value
         memory_store.update_attestation(claim_id, attestation)
+        await webhook_service.trigger_status_change(attestation)
+        
+        # Step 2: Generate proof (simplified for demo)
+        attestation["status"] = AttestationStatus.GENERATING_PROOF.value
+        memory_store.update_attestation(claim_id, attestation)
+        await webhook_service.trigger_status_change(attestation)
         
         proof = {
             "proof_hash": hashlib.sha256(attestation["evidence"]["merkle_root"].encode()).hexdigest(),
@@ -77,9 +85,10 @@ async def process_attestation(claim_id: str):
         }
         attestation["proof"] = proof
         
-        # Step 4: Assemble package
-        attestation["status"] = "assembling_package"
+        # Step 3: Assemble package
+        attestation["status"] = AttestationStatus.ASSEMBLING_PACKAGE.value
         memory_store.update_attestation(claim_id, attestation)
+        await webhook_service.trigger_status_change(attestation)
         
         package = {
             "protocol": "zkpa",
@@ -98,10 +107,11 @@ async def process_attestation(claim_id: str):
             "size_bytes": len(package_bytes)
         }
         
-        # Step 5: Anchor (optional, if Algorand enabled)
+        # Step 4: Anchor (optional, if Algorand enabled)
         if settings.ALGORAND_MNEMONIC:
-            attestation["status"] = "anchoring"
+            attestation["status"] = AttestationStatus.ANCHORING.value
             memory_store.update_attestation(claim_id, attestation)
+            await webhook_service.trigger_status_change(attestation)
             
             try:
                 from app.core.anchoring.algorand_testnet import AlgorandTestnetAnchor
@@ -115,19 +125,31 @@ async def process_attestation(claim_id: str):
             except Exception as e:
                 logger.warning(f"Anchor failed (continuing without): {e}")
                 attestation["anchor"] = {"error": str(e), "chain": "algorand"}
+                attestation["status"] = AttestationStatus.FAILED_ANCHOR.value
+                memory_store.update_attestation(claim_id, attestation)
+                await webhook_service.trigger_failure(attestation, str(e))
+                return
         
         # Final status
-        attestation["status"] = "valid"
+        attestation["status"] = AttestationStatus.VALID.value
         attestation["completed_at"] = datetime.utcnow().isoformat()
         memory_store.update_attestation(claim_id, attestation)
         
-        logger.info(f"Attestation {claim_id} completed successfully")
+        # Trigger completion webhook
+        await webhook_service.trigger_completion(attestation)
+        
+        logger.info(f"Attestation {claim_id} completed successfully with status: {attestation['status']}")
         
     except Exception as e:
-        logger.error(f"Attestation processing failed: {e}")
-        attestation["status"] = "failed"
+        logger.error(f"Attestation processing failed: {e}", exc_info=True)
+        attestation = memory_store.get_attestation(claim_id)
+        attestation["status"] = AttestationStatus.FAILED.value
         attestation["error"] = str(e)
+        attestation["failed_at"] = datetime.utcnow().isoformat()
         memory_store.update_attestation(claim_id, attestation)
+        
+        # Trigger failure webhook
+        await webhook_service.trigger_failure(attestation, str(e))
 
 # Endpoints
 @router.post("", response_model=AttestationResponse)
@@ -187,7 +209,7 @@ async def create_attestation(
         # Create attestation
         attestation = {
             "claim_id": claim_id,
-            "status": "pending",
+            "status": AttestationStatus.PENDING.value,
             "evidence": {
                 "items": evidence_items,
                 "count": len(evidence_items),
