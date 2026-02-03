@@ -4,6 +4,7 @@ Manages environment variables and application settings
 """
 
 from pydantic_settings import BaseSettings
+from pydantic import field_validator
 from typing import List, Optional, Union
 from functools import lru_cache
 import json
@@ -102,13 +103,17 @@ class Settings(BaseSettings):
     ALGORAND_INDEXER_URL: Optional[str] = os.environ.get("ALGORAND_INDEXER_URL")
     # App id of deployed anchoring contract.
     # If not set, /api/v1/anchoring/algorand/contract/deploy can deploy and return an id.
-    ALGORAND_ANCHOR_APP_ID: Optional[int] = (
-        int(os.environ["ALGORAND_ANCHOR_APP_ID"]) if os.environ.get("ALGORAND_ANCHOR_APP_ID") else None
-    )
+    ALGORAND_ANCHOR_APP_ID: Optional[int] = None
     # Backward compatibility with existing .env values in this repo
-    REGISTRY_APP_ID: Optional[int] = (
-        int(os.environ["REGISTRY_APP_ID"]) if os.environ.get("REGISTRY_APP_ID") else None
-    )
+    REGISTRY_APP_ID: Optional[int] = None
+    
+    @field_validator('ALGORAND_ANCHOR_APP_ID', 'REGISTRY_APP_ID', mode='before')
+    @classmethod
+    def parse_optional_int(cls, v):
+        """Parse optional integer fields, converting empty strings to None"""
+        if v == '' or v is None:
+            return None
+        return int(v)
     
     # RMF Engine Integration
     RMF_ENGINE_WEBHOOK_URL: str = "http://localhost:3000/api/webhooks/zkp-callback"
