@@ -69,9 +69,22 @@ See `samples/` for example output JSON artifacts from the workflow.
 - Do **not** commit `.env` files or real credentials/mnemonics. Use `.env.example` as a template.
 - If you enable Algorand anchoring, use a **TestNet** account and fund it via the TestNet dispenser.
 
+## 🚀 Deploy to Railway
+
+**Quick Deploy**: [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https://github.com/Compliledger/Zkp_Assestation_gemini3)
+
+**Manual Deployment**: See [RAILWAY_DEPLOYMENT.md](RAILWAY_DEPLOYMENT.md) for complete deployment guide.
+
+**Key Steps**:
+1. Add PostgreSQL database in Railway
+2. Set required environment variables (JWT_SECRET, ENCRYPTION_KEY)
+3. Deploy from GitHub repository
+4. Access at: `https://your-app.railway.app/docs`
+
 ## Demo link (for Devpost)
 
-- TODO: Add deployed link (Railway/Fly/Render). Swagger UI at `/docs` is acceptable if it’s interactive.
+- Railway deployment: See [RAILWAY_DEPLOYMENT.md](RAILWAY_DEPLOYMENT.md)
+- Swagger UI at `/docs` is accessible once deployed
 
 ## Repo layout
 
