@@ -1,0 +1,14 @@
+{
+  "$schema": "https://railway.app/railway.schema.json",
+  "build": {
+    "builder": "NIXPACKS",
+    "buildCommand": "cd gemini3-zkp-attestation-agent && pip install --no-cache-dir -r requirements.txt"
+  },
+  "deploy": {
+    "startCommand": "cd gemini3-zkp-attestation-agent && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}",
+    "healthcheckPath": "/health/live",
+    "healthcheckTimeout": 100,
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 10
+  }
+}
