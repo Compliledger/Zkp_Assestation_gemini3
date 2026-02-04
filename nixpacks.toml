@@ -1,5 +1,5 @@
 [phases.setup]
-nixPkgs = ["python311", "postgresql", "gcc", "libpqxx"]
+nixPkgs = ["python311", "python311Packages.pip", "postgresql", "gcc", "libpqxx"]
 
 [phases.install]
 cmds = [
