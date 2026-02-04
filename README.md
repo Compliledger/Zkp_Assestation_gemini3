@@ -1,47 +1,72 @@
 Gemini-3 ZKP Attestation Agent
 
-Prove compliance without exposing evidence.
+Transform assessed compliance results into privacy-preserving, verifiable proofs.
 
-This repository contains a hackathon-scoped implementation of a Gemini-3-powered Zero-Knowledge Proof (ZKP) Attestation Agent. The project demonstrates how advanced AI reasoning and cryptographic techniques can be combined to generate verifiable compliance attestations while keeping sensitive evidence private.
-
-⸻
-
-What This Project Does
-
-The Gemini-3 ZKP Attestation Agent allows a user to:
-	1.	Submit a compliance control or policy statement (e.g., NIST 800-53 AC-2)
-	2.	Use Gemini 3 to interpret the requirement and determine how it can be proven
-	3.	Generate a privacy-preserving attestation artifact
-	4.	Verify compliance without revealing underlying evidence
-
-Instead of collecting and exposing raw audit artifacts, the system produces cryptographic proofs that can be independently verified.
+This repository contains a hackathon-scoped implementation of a Gemini-3-powered Zero-Knowledge Proof (ZKP) Attestation Agent.
+The agent operates after a compliance assessment has already been performed and converts assessment results into cryptographically verifiable attestations—without exposing underlying evidence.
 
 ⸻
 
-Gemini 3 Integration (Core to the Project)
+What This Agent Does (Plain Language)
 
-Gemini 3 is central to this application and is used as the reasoning and orchestration layer, not just for text generation.
+Most compliance workflows stop after determining whether a control passed or failed.
+This agent addresses what comes next.
 
-Specifically, Gemini 3 is used to:
-	•	Interpret natural-language compliance controls and policy statements
-	•	Classify the claim type (e.g., control effectiveness, evidence integrity)
-	•	Select the appropriate proof template or attestation strategy
-	•	Produce structured, deterministic outputs that drive cryptographic workflows
+The ZKP Attestation Agent:
+	•	Takes an assessment result (e.g., AC-7 = PASS)
+	•	Commits to that result cryptographically
+	•	Generates a verifiable credential and zero-knowledge proof
+	•	Allows third parties to verify compliance without seeing evidence
 
-Without Gemini 3’s reasoning capabilities, the system would not be able to translate human regulatory language into machine-verifiable proof requirements.
+It does not scan systems, collect logs, or perform assessments.
+
+⸻
+
+Where This Fits in the Compliance Lifecycle
+
+This agent represents the final proof layer of a larger compliance pipeline.
+
+Typical lifecycle:
+	1.	Evidence is collected (system integrations or uploads)
+	2.	Controls are assessed (pass / fail / partial)
+	3.	Assessment results are produced
+	4.	ZKP Attestation Agent generates a proof of the result
+	5.	Proof is shared, verified, or anchored
+
+This repository focuses exclusively on Step 4.
+
+⸻
+
+Role of Gemini 3 (Central to the Agent)
+
+Gemini 3 is used as a semantic and normalization layer, not an assessor.
+
+Specifically, Gemini 3:
+	•	Interprets assessment outputs across frameworks
+	•	Normalizes control identifiers and results
+	•	Produces well-formed, precise compliance claims
+	•	Ensures claims are suitable for verifiable credentials and ZK proofs
+	•	Generates structured, deterministic outputs used by the proof workflow
+
+Without Gemini 3, assessment results would remain inconsistent, non-portable, and difficult to verify cryptographically.
 
 ⸻
 
 Why Zero-Knowledge Proofs?
 
-Traditional compliance requires exposing sensitive internal evidence.
-This project demonstrates an alternative:
-	•	✔ Prove compliance
-	•	✖ Do not reveal raw evidence
-	•	✔ Enable independent verification
-	•	✔ Preserve privacy by design
+Traditional compliance sharing requires exposing:
+	•	Logs
+	•	Configurations
+	•	Screenshots
+	•	Sensitive system details
 
-The result is proof-based compliance, not trust-based reporting.
+This agent enables a different model:
+	•	✔ Prove a control passed
+	•	✔ Prove when it was valid
+	•	✔ Prove who issued the assessment
+	•	✖ Do not reveal evidence
+
+This is proof-based compliance, not trust-based reporting.
 
 ⸻
 
@@ -49,78 +74,65 @@ Demo & Judge Experience
 
 Public Demo
 
-Live Demo:
+🔗 Live Demo:
 https://zkp-gemini.lovable.app
 	•	No login required
-	•	Includes Judge Mode for guided evaluation
-	•	Clearly labeled Demo Mode where responses may be simulated
+	•	Judge Mode enabled
+	•	Assessment inputs are simulated for demo purposes and clearly labeled
 
-Typical Flow
-	1.	Enter or select a control statement
-	2.	Choose a compliance framework
-	3.	Generate attestation
-	4.	Review proof + verification result
-	5.	Download attestation artifact
+Demo Focus
+
+The demo shows how completed assessment results are transformed into:
+	•	Verifiable credentials
+	•	Zero-knowledge attestations
+	•	Independently verifiable proof artifacts
 
 ⸻
 
-Architecture Overview
-
-High-level flow:
-	1.	Client submits control statement
-	2.	Gemini 3 interprets the requirement
-	3.	Claim is created (pending)
-	4.	Evidence commitment and proof generation run asynchronously
-	5.	Attestation package is assembled
-	6.	Optional anchoring step
-	7.	Attestation is returned as valid
-
-This design intentionally uses an async workflow to reflect real-world ZKP and blockchain operations.
+Example Input to the Agent (Conceptual)
+{
+  "control_id": "AC-7",
+  "framework": "NIST 800-53",
+  "assessment_result": "PASS",
+  "assessment_method": "automated",
+  "assessment_window": "2026-01-01 to 2026-01-31"
+}
 
 Repository Structure
-
 gemini3-zkp-attestation-agent/
 ├── app/
-│   ├── api/                # FastAPI endpoints
-│   ├── gemini/             # Gemini 3 client, prompts, schemas
-│   ├── services/           # Claim interpretation & orchestration
-│   ├── zkp/                # ZKP proof logic (simplified/demo)
-│   └── models/             # Request/response schemas
-├── samples/                # Sample controls & demo inputs
+│   ├── api/            # Attestation & verification endpoints
+│   ├── gemini/         # Gemini 3 client, prompts, schemas
+│   ├── services/       # Claim normalization & orchestration
+│   ├── zkp/            # ZKP generation (simplified for demo)
+│   └── models/         # Structured request/response schemas
+├── samples/
 ├── requirements.txt
 ├── railway.json
 └── README.md
 
 Hackathon Scope Disclaimer
 
-This repository is intentionally scoped for the Gemini 3 Hackathon:
-	•	Focuses on AI-driven reasoning + attestation orchestration
-	•	Some cryptographic and anchoring steps may be simplified or simulated
-	•	Not intended to represent a production-ready compliance platform
+This project:
+	•	Focuses on post-assessment proof generation
+	•	Uses simulated assessment inputs for demonstration
+	•	Simplifies cryptographic steps where appropriate
+	•	Is not a full compliance assessment platform
 
-This approach prioritizes clarity, verifiability, and judge experience.
+The goal is to demonstrate AI-driven compliance proof generation, not system scanning.
 
 ⸻
 
 Built With
-	•	Gemini 3 API – policy interpretation & reasoning
+	•	Gemini 3 API – claim normalization & semantic reasoning
 	•	Python – core application logic
 	•	FastAPI – API layer & interactive docs
 	•	Zero-Knowledge Proof techniques – privacy-preserving attestations
 	•	JSON / Structured Schemas – deterministic AI outputs
 	•	Railway – deployment
-	•	GitHub – source control
 
 ⸻
 
-Demo Video
+One-Sentence Summary
 
-Demo Video (≤ 3 minutes):
-(link added in Devpost submission)
-
-⸻
-
-License
-
-MIT (hackathon demo use)
-
+This agent transforms completed compliance assessments into privacy-preserving, cryptographically verifiable proofs.
