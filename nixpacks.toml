@@ -1,0 +1,15 @@
+[phases.setup]
+nixPkgs = ["python311", "postgresql", "gcc", "libpqxx"]
+
+[phases.install]
+cmds = [
+    "cd gemini3-zkp-attestation-agent",
+    "pip install --upgrade pip",
+    "pip install --no-cache-dir -r requirements.txt"
+]
+
+[phases.build]
+cmds = ["echo 'Build complete'"]
+
+[start]
+cmd = "cd gemini3-zkp-attestation-agent && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"
