@@ -18,6 +18,7 @@ from app.utils.sample_controls import (
 from app.utils.demo_data import DemoDataGenerator
 from app.storage.memory_store import memory_store
 from app.models.attestation_status import AttestationStatus
+from app.services.gemini_service import get_gemini_service
 from datetime import datetime
 import hashlib
 
@@ -148,13 +149,22 @@ async def quick_attest_from_control(
     if not control:
         raise HTTPException(status_code=404, detail=f"Control {control_id} not found")
     
+    # Use Gemini to interpret control (NEW!)
+    gemini_service = get_gemini_service()
+    interpretation = await gemini_service.interpret_control(
+        control_statement=control.statement,
+        framework=control.framework,
+        control_id=control.control_id
+    )
+    
     # Generate claim ID
     timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
     claim_hash = hashlib.sha256(f"{control_id}{timestamp}".encode()).hexdigest()[:8]
     claim_id = f"ATT-{timestamp[:8]}-{claim_hash.upper()}"
     
-    # Auto-generate evidence based on control
-    evidence_items = DemoDataGenerator.generate_evidence_list(control.evidence_count)
+    # Auto-generate evidence based on Gemini's requirements
+    evidence_count = max(control.evidence_count, len(interpretation.evidence_requirements))
+    evidence_items = DemoDataGenerator.generate_evidence_list(evidence_count)
     
     # Create attestation
     attestation = {
@@ -190,6 +200,18 @@ async def quick_attest_from_control(
             "source": "sample_control",
             "quick_attest": True,
             "auto_generated_evidence": True
+        },
+        
+        # Gemini AI Interpretation (NEW!)
+        "gemini_interpretation": {
+            "claim_type": interpretation.claim_type,
+            "proof_template": interpretation.proof_template,
+            "evidence_requirements": interpretation.evidence_requirements,
+            "risk_level": interpretation.risk_level,
+            "reasoning": interpretation.reasoning,
+            "confidence": interpretation.confidence,
+            "interpreted_by": interpretation.interpreted_by,
+            "interpreted_at": datetime.utcnow().isoformat()
         }
     }
     
@@ -203,7 +225,7 @@ async def quick_attest_from_control(
     return {
         "claim_id": claim_id,
         "status": "pending",
-        "message": f"Quick attestation created from {control.framework} control {control.control_id}",
+        "message": f"✨ Quick attestation created from {control.framework} control {control.control_id} (Gemini interpreted)",
         "control": {
             "control_id": control.control_id,
             "framework": control.framework,
@@ -212,7 +234,16 @@ async def quick_attest_from_control(
         "evidence_count": len(evidence_items),
         "created_at": attestation["created_at"],
         "poll_url": f"/api/v1/attestations/{claim_id}",
-        "verify_url": "/api/v1/verify"
+        "verify_url": "/api/v1/verify",
+        
+        # Gemini AI insights
+        "gemini_insights": {
+            "claim_type": interpretation.claim_type,
+            "proof_template": interpretation.proof_template,
+            "risk_level": interpretation.risk_level,
+            "reasoning": interpretation.reasoning,
+            "interpreted_by": interpretation.interpreted_by
+        }
     }
 
 
