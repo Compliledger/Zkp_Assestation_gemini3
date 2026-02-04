@@ -13,7 +13,7 @@ from prometheus_client import make_asgi_app
 
 from app.config import settings
 from app.utils.logger import setup_logging
-from app.api.v1 import attestations, verification, lifecycle, health, evidence, proofs, attestation_assembly, anchoring, demo
+from app.api.v1 import attestations, verification, lifecycle, health, evidence, proofs, attestation_assembly, anchoring, demo, samples, judge
 from app.db.session import engine, Base
 
 # Setup logging
@@ -137,6 +137,18 @@ app.include_router(
     demo.router,
     prefix="/api/v1/demo",
     tags=["Demo & Testing"],
+)
+
+app.include_router(
+    samples.router,
+    prefix="/api/v1/samples",
+    tags=["Sample Controls"],
+)
+
+app.include_router(
+    judge.router,
+    prefix="/api/v1/judge",
+    tags=["Judge Mode"],
 )
 
 # Prometheus metrics endpoint

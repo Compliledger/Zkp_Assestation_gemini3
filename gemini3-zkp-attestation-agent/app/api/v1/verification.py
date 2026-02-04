@@ -5,12 +5,13 @@ Verify attestation proofs
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from datetime import datetime
 import uuid
 import logging
 
 from app.storage.memory_store import memory_store
+from app.utils.response_enhancer import enhance_verification_response
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -44,8 +45,8 @@ def generate_receipt_id() -> str:
     return f"VER-{timestamp}-{random_suffix}"
 
 
-@router.post("/verify", response_model=VerificationResponse)
-async def verify_attestation(request: VerificationRequest):
+@router.post("/verify", response_model=dict)
+async def verify_attestation(request: VerificationRequest, enhanced: bool = True):
     """
     Verify an attestation
     
@@ -150,11 +151,15 @@ async def verify_attestation(request: VerificationRequest):
     
     logger.info(f"Verification {receipt_id} completed with status: {overall_status}")
     
+    # Return enhanced format by default
+    if enhanced:
+        return enhance_verification_response(verification)
+    
     return VerificationResponse(**verification)
 
 
-@router.get("/verify/{receipt_id}", response_model=VerificationResponse)
-async def get_verification_receipt(receipt_id: str):
+@router.get("/verify/{receipt_id}", response_model=dict)
+async def get_verification_receipt(receipt_id: str, enhanced: bool = True):
     """Get verification receipt by ID"""
     verification = memory_store.get_verification(receipt_id)
     if not verification:
@@ -162,4 +167,9 @@ async def get_verification_receipt(receipt_id: str):
             status_code=404,
             detail=f"Verification receipt {receipt_id} not found"
         )
+    
+    # Return enhanced format by default
+    if enhanced:
+        return enhance_verification_response(verification)
+    
     return VerificationResponse(**verification)

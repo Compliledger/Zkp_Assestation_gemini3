@@ -4,6 +4,7 @@ Generate and retrieve attestations
 """
 
 from fastapi import APIRouter, HTTPException, Header, BackgroundTasks
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field, HttpUrl
 from typing import List, Optional
 from datetime import datetime, timedelta
@@ -16,6 +17,7 @@ from app.utils.merkle import create_merkle_tree_from_hashes
 from app.config import settings
 from app.models.attestation_status import AttestationStatus
 from app.services.webhook_service import webhook_service
+from app.utils.response_enhancer import enhance_attestation_response
 import hashlib
 
 logger = logging.getLogger(__name__)
@@ -89,6 +91,7 @@ async def process_attestation(claim_id: str):
         attestation["status"] = AttestationStatus.ASSEMBLING_PACKAGE.value
         memory_store.update_attestation(claim_id, attestation)
         await webhook_service.trigger_status_change(attestation)
+        await asyncio.sleep(delay)
         
         package = {
             "protocol": "zkpa",
@@ -247,17 +250,110 @@ async def create_attestation(
         logger.error(f"Error creating attestation: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Attestation creation failed: {str(e)}")
 
-@router.get("/{claim_id}", response_model=AttestationDetail)
-async def get_attestation(claim_id: str):
+@router.get("/{claim_id}", response_model=dict)
+async def get_attestation(claim_id: str, enhanced: bool = True):
     """
-    Get attestation status and details
+    Get attestation details by claim_id
+    
+    Returns full attestation including evidence, proof, package, and anchor.
+    Enhanced format includes summary, verification_status, and privacy info.
+    
+    Query params:
+    - enhanced: Return enhanced format for UI (default: true)
     """
     attestation = memory_store.get_attestation(claim_id)
     
     if not attestation:
         raise HTTPException(status_code=404, detail=f"Attestation {claim_id} not found")
     
+    # Return enhanced format by default
+    if enhanced:
+        return enhance_attestation_response(attestation)
+    
     return AttestationDetail(**attestation)
+
+@router.get("/{claim_id}/download")
+async def download_attestation(claim_id: str, format: str = "json"):
+    """
+    Download attestation as file
+    
+    Query params:
+    - format: json (default) or oscal
+    
+    Returns attestation with Content-Disposition header for download.
+    """
+    attestation = memory_store.get_attestation(claim_id)
+    
+    if not attestation:
+        raise HTTPException(status_code=404, detail=f"Attestation {claim_id} not found")
+    
+    # Enhance the response
+    enhanced = enhance_attestation_response(attestation)
+    
+    # Format selection
+    if format == "oscal":
+        # Convert to OSCAL format (simplified)
+        content = _convert_to_oscal(enhanced)
+        filename = f"attestation-{claim_id}.oscal.json"
+    else:
+        # Default JSON format
+        content = enhanced
+        filename = f"attestation-{claim_id}.json"
+    
+    # Return as downloadable file
+    return JSONResponse(
+        content=content,
+        headers={
+            "Content-Disposition": f'attachment; filename="{filename}"',
+            "Content-Type": "application/json"
+        }
+    )
+
+
+def _convert_to_oscal(attestation: dict) -> dict:
+    """
+    Convert attestation to OSCAL format (simplified)
+    
+    This is a basic OSCAL structure. Full OSCAL conversion would be more complex.
+    """
+    return {
+        "oscal-version": "1.0.0",
+        "assessment-results": {
+            "uuid": attestation["claim_id"],
+            "metadata": {
+                "title": f"ZKP Attestation - {attestation['summary']['control_id']}",
+                "published": attestation["created_at"],
+                "last-modified": attestation.get("completed_at", attestation["created_at"]),
+                "version": "1.0",
+                "oscal-version": "1.0.0"
+            },
+            "results": [
+                {
+                    "uuid": attestation["claim_id"],
+                    "title": attestation["summary"]["control_title"],
+                    "description": f"Zero-knowledge attestation for {attestation['summary']['framework']} control {attestation['summary']['control_id']}",
+                    "start": attestation["created_at"],
+                    "end": attestation.get("completed_at"),
+                    "findings": [
+                        {
+                            "uuid": f"{attestation['claim_id']}-finding-1",
+                            "title": "Compliance Verification",
+                            "description": "Zero-knowledge proof verification",
+                            "target": {
+                                "type": "control",
+                                "id": attestation["summary"]["control_id"]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "zkp_metadata": {
+            "proof_hash": attestation.get("cryptographic_proof", {}).get("proof_hash"),
+            "merkle_root": attestation.get("cryptographic_proof", {}).get("merkle_root"),
+            "verification_status": attestation.get("verification_status", {}).get("overall")
+        }
+    }
 
 @router.get("", response_model=List[AttestationDetail])
 async def list_attestations(limit: int = 100, offset: int = 0):

@@ -24,8 +24,6 @@ DEMO_TOKEN = "demo_hackathon_token_2026"
 DEMO_USER_PAYLOAD = TokenPayload(
     sub="demo_user",
     tenant_id="demo_tenant",
-    username="demo_user",
-    email="demo@hackathon.local",
     permissions=["zkpa:generate", "zkpa:verify", "zkpa:revoke", "zkpa:admin"]
 )
 

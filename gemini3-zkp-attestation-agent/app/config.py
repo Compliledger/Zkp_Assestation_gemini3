@@ -33,6 +33,11 @@ class Settings(BaseSettings):
     DEMO_MODE: bool = True
     USE_IN_MEMORY_STORAGE: bool = True
     
+    # Judge Mode Settings (for Devpost demos)
+    JUDGE_MODE: bool = False
+    JUDGE_MODE_FAST_RESPONSES: bool = False  # Enable <2s responses
+    JUDGE_MODE_MOCK_ANCHOR: bool = False  # Use mock blockchain anchoring
+    
     # Server
     HOST: str = "0.0.0.0"
     PORT: int = int(os.environ.get("PORT", 8000))  # Railway provides PORT env var
