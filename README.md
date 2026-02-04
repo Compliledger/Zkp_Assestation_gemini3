@@ -3,6 +3,7 @@ Gemini-3 ZKP Attestation Agent
 Transform assessed compliance results into privacy-preserving, verifiable proofs.
 
 This repository contains a hackathon-scoped implementation of a Gemini-3-powered Zero-Knowledge Proof (ZKP) Attestation Agent.
+
 The agent operates after a compliance assessment has already been performed and converts assessment results into cryptographically verifiable attestations—without exposing underlying evidence.
 
 ⸻
@@ -10,6 +11,7 @@ The agent operates after a compliance assessment has already been performed and 
 What This Agent Does (Plain Language)
 
 Most compliance workflows stop after determining whether a control passed or failed.
+
 This agent addresses what comes next.
 
 The ZKP Attestation Agent:
@@ -62,8 +64,11 @@ Traditional compliance sharing requires exposing:
 
 This agent enables a different model:
 	•	✔ Prove a control passed
+	
 	•	✔ Prove when it was valid
+	
 	•	✔ Prove who issued the assessment
+	
 	•	✖ Do not reveal evidence
 
 This is proof-based compliance, not trust-based reporting.
@@ -74,10 +79,13 @@ Demo & Judge Experience
 
 Public Demo
 
-🔗 Live Demo:
+Live Demo:
+
 https://zkp-gemini.lovable.app
 	•	No login required
+	
 	•	Judge Mode enabled
+	
 	•	Assessment inputs are simulated for demo purposes and clearly labeled
 
 Demo Focus
@@ -90,25 +98,42 @@ The demo shows how completed assessment results are transformed into:
 ⸻
 
 Example Input to the Agent (Conceptual)
+
 {
   "control_id": "AC-7",
+  
   "framework": "NIST 800-53",
+  
   "assessment_result": "PASS",
+  
   "assessment_method": "automated",
+  
   "assessment_window": "2026-01-01 to 2026-01-31"
 }
 
 Repository Structure
+
 gemini3-zkp-attestation-agent/
+
 ├── app/
-│   ├── api/            # Attestation & verification endpoints
+
+│   ├── api/            # Attestation
+& verification endpoints
+
 │   ├── gemini/         # Gemini 3 client, prompts, schemas
+
 │   ├── services/       # Claim normalization & orchestration
+
 │   ├── zkp/            # ZKP generation (simplified for demo)
+
 │   └── models/         # Structured request/response schemas
+
 ├── samples/
+
 ├── requirements.txt
+
 ├── railway.json
+
 └── README.md
 
 Hackathon Scope Disclaimer
