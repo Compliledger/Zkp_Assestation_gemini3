@@ -1,126 +1,126 @@
-# Zkp_Assestation_gemini3
+Gemini-3 ZKP Attestation Agent
 
-This repository contains the **hackathon demo package** under:
+Prove compliance without exposing evidence.
 
-- `gemini3-zkp-attestation-agent/`
+This repository contains a hackathon-scoped implementation of a Gemini-3-powered Zero-Knowledge Proof (ZKP) Attestation Agent. The project demonstrates how advanced AI reasoning and cryptographic techniques can be combined to generate verifiable compliance attestations while keeping sensitive evidence private.
 
-The local folder `ZKP-Agent-main/` is present in this workspace for reference only and is **gitignored** (it will not be pushed).
+⸻
 
-## Hackathon demo: `gemini3-zkp-attestation-agent/`
+What This Project Does
 
-### What it is
-A minimal, end-to-end ZKP attestation demo (FastAPI + scripts + samples) packaged from the internal workspace.
+The Gemini-3 ZKP Attestation Agent allows a user to:
+	1.	Submit a compliance control or policy statement (e.g., NIST 800-53 AC-2)
+	2.	Use Gemini 3 to interpret the requirement and determine how it can be proven
+	3.	Generate a privacy-preserving attestation artifact
+	4.	Verify compliance without revealing underlying evidence
 
-### Quick start
+Instead of collecting and exposing raw audit artifacts, the system produces cryptographic proofs that can be independently verified.
 
-```bash
-cd gemini3-zkp-attestation-agent
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env
+⸻
 
-# Run API + Swagger UI
-python3 -m uvicorn app.main:app --reload --port 8000
-```
+Gemini 3 Integration (Core to the Project)
 
-Open:
-- `http://localhost:8000/docs`
+Gemini 3 is central to this application and is used as the reasoning and orchestration layer, not just for text generation.
 
-### No-secrets / privacy
+Specifically, Gemini 3 is used to:
+	•	Interpret natural-language compliance controls and policy statements
+	•	Classify the claim type (e.g., control effectiveness, evidence integrity)
+	•	Select the appropriate proof template or attestation strategy
+	•	Produce structured, deterministic outputs that drive cryptographic workflows
 
-- Do **not** commit `.env` or real credentials/mnemonics.
-- Use `.env.example` as a template.
+Without Gemini 3’s reasoning capabilities, the system would not be able to translate human regulatory language into machine-verifiable proof requirements.
 
-### License
+⸻
 
-See `gemini3-zkp-attestation-agent/LICENSE`.
+Why Zero-Knowledge Proofs?
 
----
+Traditional compliance requires exposing sensitive internal evidence.
+This project demonstrates an alternative:
+	•	✔ Prove compliance
+	•	✖ Do not reveal raw evidence
+	•	✔ Enable independent verification
+	•	✔ Preserve privacy by design
 
-# ZKP Attestation Agent (Hackathon Demo Repo)
+The result is proof-based compliance, not trust-based reporting.
 
-This repo is a **hackathon-packaged subset** of the internal `ZKP-Agent-main` workspace, containing only what’s needed to run the demo end-to-end.
+⸻
 
-## What it does
+Demo & Judge Experience
 
-Pipeline:
-1. Collect mock evidence and hash it (SHA-256)
-2. Build a Merkle tree commitment (Merkle root)
-3. Assemble an attestation package (ZKPA v1.1 format)
-4. (Optional) Anchor the attestation on Algorand TestNet
-5. Verify results (local + on-chain verification scripts)
+Public Demo
 
-## Gemini 3 integration (status)
+Live Demo:
+https://zkp-gemini.lovable.app
+	•	No login required
+	•	Includes Judge Mode for guided evaluation
+	•	Clearly labeled Demo Mode where responses may be simulated
 
-There is **no Gemini integration present in this codebase** at the moment (no client wrapper, no prompts, no parsing/validation).
+Typical Flow
+	1.	Enter or select a control statement
+	2.	Choose a compliance framework
+	3.	Generate attestation
+	4.	Review proof + verification result
+	5.	Download attestation artifact
 
-If you want the repo to meet the “Gemini 3 usage” judging checklist, you need to either:
-- **Provide the existing Gemini module** you want included, or
-- Allow me to add a **minimal Gemini wrapper + prompt** (small amount of new code).
+⸻
 
-## Run locally
+Architecture Overview
 
-### 1) Setup
+High-level flow:
+	1.	Client submits control statement
+	2.	Gemini 3 interprets the requirement
+	3.	Claim is created (pending)
+	4.	Evidence commitment and proof generation run asynchronously
+	5.	Attestation package is assembled
+	6.	Optional anchoring step
+	7.	Attestation is returned as valid
 
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env
-```
+This design intentionally uses an async workflow to reflect real-world ZKP and blockchain operations.
 
-### 2) Start the API (Swagger UI)
+Repository Structure
 
-This service uses Postgres by default. For local dev, set `DATABASE_URL` in `.env`.
-
-```bash
-uvicorn app.main:app --reload --port 8000
-```
-
-Open:
-- `http://localhost:8000/docs`
-
-### 3) Quick demo (no API required)
-
-This runs Steps 1–4 locally and prints a complete attestation package:
-
-```bash
-python scripts/demo_attestation_workflow.py
-```
-
-### 4) JWT for calling protected endpoints
-
-Most endpoints require a Bearer token. For local demo you can generate one like:
-
-```bash
-python -c "from app.core.auth import create_token_for_user; print(create_token_for_user('judge','demo',['zkpa:admin']))"
-```
-
-Paste the token into Swagger UI via **Authorize**.
-
-## Samples
-
-See `samples/` for example output JSON artifacts from the workflow.
-
-## Privacy / No-secrets
-
-- This repo is designed to be **public hackathon-safe** and uses **mock/demo evidence**.
-- Do **not** commit `.env` files or real credentials/mnemonics. Use `.env.example` as a template.
-- If you enable Algorand anchoring, use a **TestNet** account and fund it via the TestNet dispenser.
-
-## Demo link (for Devpost)
-
-- TODO: Add deployed link (Railway/Fly/Render). Swagger UI at `/docs` is acceptable if it’s interactive.
-
-## Repo layout
-
-```
-.
-├── app/                 # FastAPI service code
-├── scripts/             # End-to-end demo scripts
-├── samples/             # Example inputs/outputs
+gemini3-zkp-attestation-agent/
+├── app/
+│   ├── api/                # FastAPI endpoints
+│   ├── gemini/             # Gemini 3 client, prompts, schemas
+│   ├── services/           # Claim interpretation & orchestration
+│   ├── zkp/                # ZKP proof logic (simplified/demo)
+│   └── models/             # Request/response schemas
+├── samples/                # Sample controls & demo inputs
 ├── requirements.txt
-├── .env.example
-└── Procfile             # Handy for deployment
-```
+├── railway.json
+└── README.md
+
+Hackathon Scope Disclaimer
+
+This repository is intentionally scoped for the Gemini 3 Hackathon:
+	•	Focuses on AI-driven reasoning + attestation orchestration
+	•	Some cryptographic and anchoring steps may be simplified or simulated
+	•	Not intended to represent a production-ready compliance platform
+
+This approach prioritizes clarity, verifiability, and judge experience.
+
+⸻
+
+Built With
+	•	Gemini 3 API – policy interpretation & reasoning
+	•	Python – core application logic
+	•	FastAPI – API layer & interactive docs
+	•	Zero-Knowledge Proof techniques – privacy-preserving attestations
+	•	JSON / Structured Schemas – deterministic AI outputs
+	•	Railway – deployment
+	•	GitHub – source control
+
+⸻
+
+Demo Video
+
+Demo Video (≤ 3 minutes):
+(link added in Devpost submission)
+
+⸻
+
+License
+
+MIT (hackathon demo use)
+
