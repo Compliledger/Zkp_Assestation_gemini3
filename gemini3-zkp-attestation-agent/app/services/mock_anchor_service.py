@@ -59,6 +59,15 @@ class MockAnchorService:
         }
     
     @staticmethod
+    def create_mock_anchor(
+        claim_id: str,
+        merkle_root: str,
+        package_hash: str
+    ) -> Dict[str, Any]:
+        """Alias for anchor_attestation (used by attestations.py)"""
+        return MockAnchorService.anchor_attestation(claim_id, merkle_root, package_hash)
+
+    @staticmethod
     def verify_anchor(transaction_hash: str) -> Dict[str, Any]:
         """
         Simulate anchor verification
@@ -71,3 +80,7 @@ class MockAnchorService:
             "verified_at": datetime.utcnow().isoformat(),
             "mock": True
         }
+
+
+# Singleton instance for easy import
+mock_anchor_service = MockAnchorService()

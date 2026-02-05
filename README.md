@@ -239,7 +239,7 @@ curl http://localhost:8000/api/v1/samples/controls
 
 **Step 2**: Create instant attestation
 ```bash
-curl -X POST http://localhost:8000/api/v1/samples/quick-attest/NIST-AC-7
+curl -X POST http://localhost:8000/api/v1/samples/quick-attest/AC-2
 ```
 
 **Step 3**: Check attestation status
@@ -251,7 +251,7 @@ curl http://localhost:8000/api/v1/attestations/{claim_id}
 ```bash
 curl -X POST http://localhost:8000/api/v1/verify \
   -H "Content-Type: application/json" \
-  -d '{"claim_id": "ATT-20260205-ABC12345"}'
+  -d '{"attestation_id": "ATT-20260205-ABC12345"}'
 ```
 
 ---
@@ -283,13 +283,14 @@ curl -X POST http://localhost:8000/api/v1/verify \
 #### 🎮 Judge Mode
 - `GET /api/v1/judge/status` - Check judge mode settings
 - `POST /api/v1/judge/enable` - Enable judge mode
-- `GET /api/v1/judge/flow` - Get guided demo flow
+- `GET /api/v1/judge/guided-flow` - Get guided demo flow
 - `POST /api/v1/judge/reset` - Reset demo data
 
 #### ⚓ Blockchain Anchoring
-- `POST /api/v1/anchoring/anchor` - Anchor attestation to blockchain
-- `POST /api/v1/anchoring/deploy` - Deploy Algorand contract
-- `GET /api/v1/anchoring/{anchor_id}` - Get anchor record
+- `POST /api/v1/anchoring/blockchain/anchor` - Anchor attestation to blockchain
+- `POST /api/v1/anchoring/algorand/contract/deploy` - Deploy Algorand contract
+- `POST /api/v1/anchoring/algorand/anchor/server` - Anchor via server signer
+- `GET /api/v1/anchoring/algorand/anchor/{package_id}` - Get anchor record
 
 ---
 

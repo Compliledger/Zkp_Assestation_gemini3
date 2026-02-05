@@ -16,11 +16,13 @@ from app.utils.sample_controls import (
     SampleControl
 )
 from app.utils.demo_data import DemoDataGenerator
+from app.utils.merkle import create_merkle_tree_from_hashes
 from app.storage.memory_store import memory_store
 from app.models.attestation_status import AttestationStatus
 from app.services.gemini_service import get_gemini_service
-from datetime import datetime
+from datetime import datetime, timedelta
 import hashlib
+import json
 
 router = APIRouter()
 
@@ -166,11 +168,22 @@ async def quick_attest_from_control(
     evidence_count = max(control.evidence_count, len(interpretation.evidence_requirements))
     evidence_items = DemoDataGenerator.generate_evidence_list(evidence_count)
     
+    # Compute Merkle tree from evidence hashes
+    hashes = [item["hash"] for item in evidence_items]
+    merkle_tree = create_merkle_tree_from_hashes(hashes)
+    merkle_root = merkle_tree.get_root()
+    
+    commitment_hash = hashlib.sha256(
+        json.dumps(evidence_items, sort_keys=True).encode()
+    ).hexdigest()
+    
+    now = datetime.utcnow()
+    
     # Create attestation
     attestation = {
         "claim_id": claim_id,
         "status": AttestationStatus.PENDING.value,
-        "created_at": datetime.utcnow().isoformat(),
+        "created_at": now.isoformat(),
         "completed_at": None,
         
         # Sample control info
@@ -183,10 +196,13 @@ async def quick_attest_from_control(
             "risk_level": control.risk_level
         },
         
-        # Evidence
+        # Evidence (with merkle_root so process_attestation can access it)
         "evidence": {
             "items": evidence_items,
-            "count": len(evidence_items)
+            "count": len(evidence_items),
+            "merkle_root": merkle_root,
+            "commitment_hash": commitment_hash,
+            "leaf_count": len(hashes)
         },
         
         # Policy
@@ -195,8 +211,12 @@ async def quick_attest_from_control(
         # Callback
         "callback_url": request.callback_url if request else None,
         
-        # Metadata
+        # Metadata (must include valid_until for response enhancer)
         "metadata": {
+            "policy": f"{control.framework} - {control.control_id}: {control.title}",
+            "compliance_framework": control.framework,
+            "issued_at": now.isoformat(),
+            "valid_until": (now + timedelta(days=90)).isoformat(),
             "source": "sample_control",
             "quick_attest": True,
             "auto_generated_evidence": True
