@@ -11,6 +11,7 @@ from datetime import datetime, timedelta
 import uuid
 import json
 import logging
+import asyncio
 
 from app.storage.memory_store import memory_store
 from app.utils.merkle import create_merkle_tree_from_hashes
@@ -69,15 +70,23 @@ async def process_attestation(claim_id: str):
     try:
         attestation = memory_store.get_attestation(claim_id)
         
+        # Judge mode: fast responses with delays
+        if settings.JUDGE_MODE and settings.JUDGE_MODE_FAST_RESPONSES:
+            delay = 0.5  # 500ms between steps for judge mode
+        else:
+            delay = 2.0  # 2 seconds for normal mode
+        
         # Step 1: Update to computing_commitment status
         attestation["status"] = AttestationStatus.COMPUTING_COMMITMENT.value
         memory_store.update_attestation(claim_id, attestation)
         await webhook_service.trigger_status_change(attestation)
+        await asyncio.sleep(delay)
         
         # Step 2: Generate proof (simplified for demo)
         attestation["status"] = AttestationStatus.GENERATING_PROOF.value
         memory_store.update_attestation(claim_id, attestation)
         await webhook_service.trigger_status_change(attestation)
+        await asyncio.sleep(delay)
         
         proof = {
             "proof_hash": hashlib.sha256(attestation["evidence"]["merkle_root"].encode()).hexdigest(),
@@ -110,8 +119,22 @@ async def process_attestation(claim_id: str):
             "size_bytes": len(package_bytes)
         }
         
-        # Step 4: Anchor (optional, if Algorand enabled)
-        if settings.ALGORAND_MNEMONIC:
+        # Step 4: Anchor (optional, if Algorand enabled or judge mode mock)
+        if settings.JUDGE_MODE and settings.JUDGE_MODE_MOCK_ANCHOR:
+            # Judge mode: use mock anchor service
+            attestation["status"] = AttestationStatus.ANCHORING.value
+            memory_store.update_attestation(claim_id, attestation)
+            await webhook_service.trigger_status_change(attestation)
+            await asyncio.sleep(delay)
+            
+            from app.services.mock_anchor_service import mock_anchor_service
+            attestation["anchor"] = mock_anchor_service.create_mock_anchor(
+                claim_id=claim_id,
+                merkle_root=attestation["evidence"]["merkle_root"],
+                package_hash=package_hash
+            )
+        elif settings.ALGORAND_MNEMONIC:
+            # Real Algorand anchoring
             attestation["status"] = AttestationStatus.ANCHORING.value
             memory_store.update_attestation(claim_id, attestation)
             await webhook_service.trigger_status_change(attestation)
