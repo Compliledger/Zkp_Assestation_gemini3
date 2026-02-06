@@ -74,10 +74,12 @@ app = FastAPI(
 
 # CORS Middleware
 if settings.CORS_ENABLED:
+    # In demo/judge mode, allow all origins for easy frontend integration
+    cors_origins = ["*"] if settings.DEMO_MODE else settings.cors_origins_list
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=settings.cors_origins_list,
-        allow_credentials=settings.CORS_ALLOW_CREDENTIALS,
+        allow_origins=cors_origins,
+        allow_credentials=False if settings.DEMO_MODE else settings.CORS_ALLOW_CREDENTIALS,
         allow_methods=["*"],
         allow_headers=["*"],
     )

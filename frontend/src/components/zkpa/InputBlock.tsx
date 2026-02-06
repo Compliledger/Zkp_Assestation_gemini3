@@ -75,7 +75,7 @@ export const InputBlock: React.FC<InputBlockProps> = ({
         <Input
           value={controlIdentifier}
           onChange={(e) => onControlIdentifierChange(e.target.value)}
-          placeholder="e.g., NIST 800-53 AC-7"
+          placeholder="e.g., AC-2, CC6.1, A.5.15"
           className="bg-secondary/30 border-border/50 focus:border-foreground/50"
           disabled={disabled}
         />

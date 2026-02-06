@@ -1,4 +1,4 @@
-export type Framework = 'NIST_800_53' | 'ISO_27001' | 'SOC2' | 'CUSTOM';
+export type Framework = 'NIST_800_53' | 'ISO_27001' | 'SOC2' | 'HIPAA' | 'PCI_DSS' | 'CUSTOM';
 
 export type AssessmentResult = 'PASS' | 'FAIL' | 'PARTIAL';
 
@@ -33,24 +33,43 @@ export interface ProgressStep {
   status: 'pending' | 'active' | 'complete' | 'error';
 }
 
+/** Backend control IDs that map to quick-attest */
 export const SAMPLE_REQUIREMENTS = [
   {
-    id: 'ac-2',
+    id: 'AC-2',
     name: 'AC-2 Account Management',
     framework: 'NIST_800_53' as Framework,
-    text: 'NIST 800-53 AC-2',
+    text: 'AC-2',
   },
   {
-    id: 'iso-vuln',
-    name: 'ISO 27001 Vulnerability Management',
+    id: 'AC-3',
+    name: 'AC-3 Access Enforcement',
+    framework: 'NIST_800_53' as Framework,
+    text: 'AC-3',
+  },
+  {
+    id: 'CC6.1',
+    name: 'CC6.1 Logical Access Security',
+    framework: 'SOC2' as Framework,
+    text: 'CC6.1',
+  },
+  {
+    id: 'A.5.15',
+    name: 'A.5.15 Access Control',
     framework: 'ISO_27001' as Framework,
-    text: 'ISO 27001 A.12.6.1',
+    text: 'A.5.15',
   },
   {
-    id: 'threshold',
-    name: 'Threshold Policy Compliance',
-    framework: 'CUSTOM' as Framework,
-    text: 'CUSTOM CONTROL-001',
+    id: '164.308(a)(1)(ii)(D)',
+    name: 'HIPAA Security Management',
+    framework: 'HIPAA' as Framework,
+    text: '164.308(a)(1)(ii)(D)',
+  },
+  {
+    id: 'PCI-10.2',
+    name: 'PCI-DSS Audit Trails',
+    framework: 'PCI_DSS' as Framework,
+    text: 'PCI-10.2',
   },
 ];
 
@@ -58,5 +77,8 @@ export const FRAMEWORK_OPTIONS = [
   { value: 'NIST_800_53', label: 'NIST 800-53' },
   { value: 'ISO_27001', label: 'ISO 27001' },
   { value: 'SOC2', label: 'SOC 2' },
+  { value: 'HIPAA', label: 'HIPAA' },
+  { value: 'PCI_DSS', label: 'PCI-DSS' },
   { value: 'CUSTOM', label: 'Custom' },
+
 ];
